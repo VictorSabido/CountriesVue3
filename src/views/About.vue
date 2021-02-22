@@ -115,7 +115,6 @@ export default {
         })
 
         const filteredCountries = computed(() => {
-
             return dataList.value.filter(data => { 
                 return data.name.toLowerCase().includes(search.value.toLowerCase()) 
             })

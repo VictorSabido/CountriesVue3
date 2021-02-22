@@ -3,8 +3,8 @@
         <div class="card" v-for="d in data" v-bind:key="d.id">
             <img class="flag" :src="d.flag" alt="">
             <div class="card-info">
-                <h3 class="country-name">{{ d.name }}</h3>
-                <span class="region">{{ d.region }}</span>
+                <h4 class="country-name">{{ d.name }}</h4>
+                <!-- <span class="region">{{ d.region }}</span> -->
             </div>
             
         </div>
@@ -42,8 +42,8 @@ export default {
 
 .cards-container .card {
     border-radius: 5px;
-    width: 200px;
-    height: 200px;
+    width: 152px;
+    height: 152px;
     background-color: ghostwhite;
     margin: 10px 10px 0px 10px;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
