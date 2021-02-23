@@ -1,47 +1,70 @@
 <template>
-    <div class="home">
-        <img alt="Vue logo" src="../assets/logo.png">
-        <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-        <Country :data="data"/>
+    <div class="container">
+        <div class="filters">
+            <div class="search">
+                <input type="text"
+                    v-model="search" 
+                    placeholder="Search for a country :)">
+            </div>
+            <div class="continent">
+                <select name="" v-model="searchByContinent">
+                    <option value="">Select continent</option>
+                    <option value="europe">Europe</option>
+                    <option value="asia">Asia</option>
+                </select>
+            </div>
+        </div>
+        <Country :data="filteredCountries"/>
     </div>
+
+    <Loading :active="showLoading"/>
 </template>
 
 <script>
-// @ is an alias to /src
-import { onMounted } from 'vue'
-import axios from 'axios'
+import {computed, onMounted, ref} from 'vue'
 import Country from '../components/Country.vue'
+import Loading from '../components/Loading.vue'
 
 export default {
-    name: 'Home',
     components: {
-        Country
+        Country,
+        Loading
     },
     setup() {
-        let data = [];
+        const dataList = ref([]);
+        const showLoading = ref(true);
 
-        onMounted(() => {
-            // console.log('Mounted');
-            data = getApi()
+        const search = ref("");
+        const searchByContinent = ref("");
+
+        onMounted( async () => {
+            await fetch('https://restcountries.eu/rest/v2/all')
+            .then(response => response.json())
+            .then((json) => {
+                dataList.value = json;
+            })
+            
+            showLoading.value = false
         })
 
-        const getApi = () => {
-            // countries = [];
-            // console.log('GetApi');
-            // axios.get('https://restcountries.eu/rest/v2/alpha/co')
-            axios.get('https://restcountries.eu/rest/v2/alpha/es')
-                .then((response) => {
-                    // console.log(response.data.name);
-                    return response.data.name
+        const filteredCountries = computed(() => {
+            if(searchByContinent.value != '') {
+                return dataList.value.filter(data => {
+                    return data.region.toLowerCase().includes(searchByContinent.value.toLocaleLowerCase())
                 })
-        }
+            }
 
-
-
-        console.log(data);
+            return dataList.value.filter(data => { 
+                return data.name.toLowerCase().includes(search.value.toLowerCase()) 
+            })
+        })
 
         return {
-            data
+            dataList,
+            showLoading,
+            search,
+            searchByContinent,
+            filteredCountries
         }
 
     }
