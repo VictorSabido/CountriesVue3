@@ -8,9 +8,9 @@
             </div>
             <div class="continent">
                 <select name="" v-model="searchByContinent">
-                    <option value="">Select continent</option>
-                    <option value="europe">Europe</option>
-                    <option value="asia">Asia</option>
+                    <option v-for="option in continentsOptions" v-bind:value="option.value" v-bind:key="option.id">
+                        {{ option.text }}
+                    </option>
                 </select>
             </div>
         </div>
@@ -24,6 +24,7 @@
 import {computed, onMounted, ref} from 'vue'
 import Country from '../components/Country.vue'
 import Loading from '../components/Loading.vue'
+import store from '../store'
 
 export default {
     components: {
@@ -31,20 +32,35 @@ export default {
         Loading
     },
     setup() {
-        const dataList = ref([]);
         const showLoading = ref(true);
-
         const search = ref("");
         const searchByContinent = ref("");
+        const optionsContinents = ref([])
 
         onMounted( async () => {
-            await fetch('https://restcountries.eu/rest/v2/all')
-            .then(response => response.json())
-            .then((json) => {
-                dataList.value = json;
-            })
-            
+            await store.dispatch("getCountries");
+
             showLoading.value = false
+        })
+
+        const dataList = computed(() => {
+            return store.state.countriesList
+        })
+
+        const continentsOptions = computed(() => {
+            const continentExist = (continentName) => {
+                return optionsContinents.value.map(continent => {
+                    return continent.text
+                }).includes(continentName)
+            }
+
+            dataList.value.map((c) => {
+                if(!continentExist(c.region) && c.region != '') {
+                    optionsContinents.value.push({ text: c.region, value: c.region });
+                }
+            });
+
+            return optionsContinents.value;
         })
 
         const filteredCountries = computed(() => {
@@ -64,7 +80,8 @@ export default {
             showLoading,
             search,
             searchByContinent,
-            filteredCountries
+            filteredCountries,
+            continentsOptions
         }
 
     }
