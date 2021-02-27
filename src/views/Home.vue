@@ -8,6 +8,7 @@
             </div>
             <div class="continent">
                 <select name="" v-model="searchByContinent">
+                    <option value=""></option>
                     <option v-for="option in continentsOptions" v-bind:value="option.value" v-bind:key="option.id">
                         {{ option.text }}
                     </option>
@@ -64,14 +65,13 @@ export default {
         })
 
         const filteredCountries = computed(() => {
-            if(searchByContinent.value != '') {
-                return dataList.value.filter(data => {
-                    return data.region.toLowerCase().includes(searchByContinent.value.toLocaleLowerCase())
-                })
-            }
-
-            return dataList.value.filter(data => { 
-                return data.name.toLowerCase().includes(search.value.toLowerCase()) 
+            return dataList.value.filter(data => {
+                if(searchByContinent.value == '') {
+                    return data.name.toLowerCase().includes(search.value.toLowerCase())
+                }
+                else{
+                    return data.region.toLowerCase().includes(searchByContinent.value.toLocaleLowerCase()) && data.name.toLowerCase().includes(search.value.toLowerCase())
+                }
             })
         })
 
@@ -83,7 +83,6 @@ export default {
             filteredCountries,
             continentsOptions
         }
-
     }
 }
 </script>
