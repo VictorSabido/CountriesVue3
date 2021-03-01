@@ -3,11 +3,14 @@ import { createStore } from 'vuex'
 export default createStore({
     state: {
         countriesList: [],
-        continents: []
+        selectContinent: ''
     },
     mutations: {
         setCountries(state, countries) {
-            state.countriesList = countries
+            state.countriesList = countries;
+        },
+        setSelectContinent(state, value) {
+            state.selectContinent = value;
         }
     },
     actions: {
@@ -21,7 +24,11 @@ export default createStore({
                 })
             })
         },
-        
+    },
+    getters: {
+        getSelectedContinent(state) {
+            return state.selectContinent
+        }
     },
     modules: {
 

@@ -2,18 +2,12 @@
     <div class="container">
         <div class="filters">
             <div class="search">
+                <i class="fas fa-search"></i>
                 <input type="text"
                     v-model="search" 
                     placeholder="Search for a country :)">
             </div>
-            <div class="continent">
-                <select name="" v-model="searchByContinent">
-                    <option value=""></option>
-                    <option v-for="option in continentsOptions" v-bind:value="option.value" v-bind:key="option.id">
-                        {{ option.text }}
-                    </option>
-                </select>
-            </div>
+            <Select :options="continentsOptions"/>
         </div>
         <Country :data="filteredCountries"/>
     </div>
@@ -25,17 +19,18 @@
 import {computed, onMounted, ref} from 'vue'
 import Country from '../components/Country.vue'
 import Loading from '../components/Loading.vue'
+import Select from '../components/Select.vue'
 import store from '../store'
 
 export default {
     components: {
         Country,
-        Loading
+        Loading,
+        Select
     },
     setup() {
         const showLoading = ref(true);
         const search = ref("");
-        const searchByContinent = ref("");
         const optionsContinents = ref([])
 
         onMounted( async () => {
@@ -64,6 +59,10 @@ export default {
             return optionsContinents.value;
         })
 
+        const searchByContinent = computed(() => {
+            return store.getters.getSelectedContinent
+        })
+
         const filteredCountries = computed(() => {
             return dataList.value.filter(data => {
                 if(searchByContinent.value == '') {
@@ -79,7 +78,6 @@ export default {
             dataList,
             showLoading,
             search,
-            searchByContinent,
             filteredCountries,
             continentsOptions
         }
