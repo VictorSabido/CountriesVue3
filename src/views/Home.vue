@@ -7,7 +7,13 @@
                     v-model="search" 
                     placeholder="Search for a country :)">
             </div>
-            <Select :options="continentsOptions"/>
+            <div class="continent-select">
+                <Multiselect
+                    v-model="search"
+                    :options="continentsOptions"
+                />
+            </div>
+            <!-- <Select :options="continentsOptions"/> -->
         </div>
         <Country :data="filteredCountries"/>
     </div>
@@ -19,18 +25,19 @@
 import {computed, onMounted, ref} from 'vue'
 import Country from '../components/Country.vue'
 import Loading from '../components/Loading.vue'
-import Select from '../components/Select.vue'
+import Multiselect from '@vueform/multiselect'
 import store from '../store'
 
 export default {
     components: {
         Country,
         Loading,
-        Select
+        Multiselect
     },
     setup() {
         const showLoading = ref(true);
         const search = ref("");
+        const valueP = ref("");
         const optionsContinents = ref([])
 
         onMounted( async () => {
@@ -45,14 +52,14 @@ export default {
 
         const continentsOptions = computed(() => {
             const continentExist = (continentName) => {
-                return optionsContinents.value.map(continent => {
-                    return continent.text
+                return  optionsContinents.value.map(continent => {
+                    return continent.label
                 }).includes(continentName)
             }
 
             dataList.value.map((c) => {
                 if(!continentExist(c.region) && c.region != '') {
-                    optionsContinents.value.push({ text: c.region, value: c.region });
+                    optionsContinents.value.push({ value: c.region, label: c.region });
                 }
             });
 
@@ -79,8 +86,10 @@ export default {
             showLoading,
             search,
             filteredCountries,
-            continentsOptions
+            continentsOptions,
+            valueP
         }
     }
 }
 </script>
+<style src="@vueform/multiselect/themes/default.css"></style>
