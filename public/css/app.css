@@ -57,6 +57,14 @@ nav {
     transition: 0.3s;
 }
 
+.cards-container .card a {
+    text-decoration: none;
+}
+
+.cards-container .card h4 {
+    color: black;
+}
+
 .cards-container .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
