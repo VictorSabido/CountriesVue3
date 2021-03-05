@@ -9,11 +9,10 @@
             </div>
             <div class="continent-select">
                 <Multiselect
-                    v-model="search"
+                    v-model="searchByContinent"
                     :options="continentsOptions"
                 />
             </div>
-            <!-- <Select :options="continentsOptions"/> -->
         </div>
         <Country :data="filteredCountries"/>
     </div>
@@ -36,9 +35,9 @@ export default {
     },
     setup() {
         const showLoading = ref(true);
-        const search = ref("");
-        const valueP = ref("");
-        const optionsContinents = ref([])
+        const search = ref('');
+        const searchByContinent = ref('');
+        const optionsContinents = ref([{value: '', label: 'All'}]);
 
         onMounted( async () => {
             await store.dispatch("getCountries");
@@ -66,10 +65,6 @@ export default {
             return optionsContinents.value;
         })
 
-        const searchByContinent = computed(() => {
-            return store.getters.getSelectedContinent
-        })
-
         const filteredCountries = computed(() => {
             return dataList.value.filter(data => {
                 if(searchByContinent.value == '') {
@@ -87,7 +82,7 @@ export default {
             search,
             filteredCountries,
             continentsOptions,
-            valueP
+            searchByContinent
         }
     }
 }
