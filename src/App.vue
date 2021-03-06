@@ -3,7 +3,7 @@
         <div class="container">
             <div class="nav-container">
                 <h1>Find your country</h1>
-                <h4>Switch</h4>
+                <SwitchMode/>
             </div>
         </div>
         <!-- <router-link to="/">Home</router-link> |
@@ -11,3 +11,13 @@
     </nav>
     <router-view/>
 </template>
+
+<script>
+import SwitchMode from './components/SwitchMode.vue'
+export default ({
+    components: {SwitchMode}
+    // setup() {
+
+    // },
+})
+</script>
