@@ -1,6 +1,5 @@
 import { createStore } from 'vuex'
 
-
 // TODO: Check selectContinent property and remove their methods
 export default createStore({
     state: {
@@ -16,7 +15,6 @@ export default createStore({
             state.selectContinent = value;
         },
         setCountry(state, value) {
-            console.log({value});
             state.country = value;
         }
     },
@@ -33,27 +31,25 @@ export default createStore({
         },
         getCountryByISO({commit}) {
             return new Promise((resolve) => {
-                console.log((this.$route));
-                commit("setCountry", 'ES');
-                console.log();
-                resolve()
-                // fetch('https://restcountries.eu/rest/v2/all')
-                //     .then(response => response.json())
-                //     .then((json) => {
-                //         commit("setCountries", json);
-                //         resolve();
-                // })
+                commit("setCountry", window.location.pathname.split('/')[2].toUpperCase());
+                resolve();
             })
         }
     },
     getters: {
+        getCountries(state) {
+            return state.countriesList;
+        },
         getSelectedContinent(state) {
             return state.selectContinent
         },
-        getCountryByISO(state, aas) {
-            console.log(state,aas);
+        getCountryInfoByISO(state) {
+            const countriesList = state.countriesList
+            const countryISO = state.country
 
-            return 2
+            let info = countriesList.find(e => e.alpha2Code == countryISO)
+
+            return info;
         }
     },
     modules: {

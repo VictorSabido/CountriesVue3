@@ -1,14 +1,18 @@
 <template>
-    <div>
+    <div class="container">
         <router-link :to="{ name: 'Home'}">Back</router-link>
-    </div>
-    <div>
-        <h2></h2>
-        <h2></h2>
-        <h2></h2>
-        <h2></h2>
-        <h2></h2>
-        <h2></h2>
+        <div>
+            <h1>{{ country.name }} ({{ country.alpha2Code }})</h1>
+            <p><b>Capital: </b> {{ country.capital }}</p>
+            <p><b>Region: </b> {{ country.region }}</p>
+            <p><b>Subregion: </b> {{ country.subregion }}</p>
+            <p><b>Population: </b> {{ country.population }}</p>
+            <p><b>Area: </b> {{ country.area }}</p>
+            <!-- <p><b>Timezone: </b> {{ country.timezones.toString() }}</p> -->
+            <!-- <p><b>Lat/Lang: </b> {{ country.latlng.toString() }}</p> -->
+            <!-- <p><b>Countries borders: </b> {{ country.borders.toString() }}</p> -->
+
+        </div>
     </div>
 
     <Loading :active="showLoading"/>
@@ -21,41 +25,26 @@ import store from '../store'
 
 export default {
     components: {
-        // Country,
         Loading
     },
     setup() {
-        // console.log(props.iso);
-        // const dataList = ref([]);
         const showLoading = ref(true);
-
-        // const search = ref("");
+        const country = ref(true);
 
         onMounted( async () => {
-            await store.dispatch("getCountryByISO");
+            if(store.getters.getCountries.value === undefined) {
+                await store.dispatch("getCountries");
+            }
 
-            // console.log({a});
-            // await fetch('https://restcountries.eu/rest/v2/all')
-            // .then(response => response.json())
-            // .then((json) => {
-            //     dataList.value = json;
-            //     console.log(json);
-            // })
-            
+            await store.dispatch("getCountryByISO");
+            country.value = store.getters.getCountryInfoByISO
+
             showLoading.value = false
         })
 
-        // const filteredCountries = computed(() => {
-        //     return dataList.value.filter(data => { 
-        //         return data.name.toLowerCase().includes(search.value.toLowerCase()) 
-        //     })
-        // })
-
         return {
-            // dataList,
             showLoading,
-            // search,
-            // filteredCountries
+            country
         }
 
     }
